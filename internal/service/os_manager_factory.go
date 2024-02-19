@@ -13,6 +13,6 @@ func NewOSManager() domain.OSManager {
 	case "linux":
 		return &infra.LinuxManager{}
 	default:
-		panic("Unsupported operating system")
+		return &infra.LinuxManager{}
 	}
 }

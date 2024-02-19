@@ -20,8 +20,8 @@ func NewCollectorService(manager domain.OSManager, collector domain.Collector, h
 		Manager:          manager,
 		Host:             host,
 		ConnectionKey:    connectionKey,
-		CollectorConfigs: config.LoadCollectorConfig("path/to/collectors.json"),
-		Templates:        config.LoadServiceTemplates("path/to/service_templates.json"),
+		CollectorConfigs: config.LoadCollectorConfig(),
+		Templates:        config.LoadServiceTemplates(),
 	}
 }
 func (c *CollectorService) SetupCollector() error {

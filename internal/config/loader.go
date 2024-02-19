@@ -4,6 +4,7 @@ import (
 	"collector/internal/domain"
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -13,8 +14,10 @@ var (
 	serviceTemplateMap map[string]string
 )
 
-func LoadCollectorConfig(path string) *[]domain.CollectorConfig {
+func LoadCollectorConfig() *[]domain.CollectorConfig {
 	once.Do(func() {
+		path, _ := getExecPath()
+		path = filepath.Join(path, "templates/collectors.json")
 		file, err := os.ReadFile(path)
 		if err != nil {
 			panic("Unable to read collector config file: " + err.Error())
@@ -27,8 +30,10 @@ func LoadCollectorConfig(path string) *[]domain.CollectorConfig {
 	return collectorConfig
 }
 
-func LoadServiceTemplates(path string) map[string]string {
+func LoadServiceTemplates() map[string]string {
 	once.Do(func() {
+		path, _ := getExecPath()
+		path = filepath.Join(path, "templates/service_tmpl.json")
 		file, err := os.ReadFile(path)
 		if err != nil {
 			panic("Unable to read service template file: " + err.Error())
@@ -39,4 +44,19 @@ func LoadServiceTemplates(path string) map[string]string {
 		}
 	})
 	return serviceTemplateMap
+}
+
+func getExecPath() (string, error) {
+	// Get the path to the executable.
+	//execPath, err := os.Executable()
+	//if err != nil {
+	//	return "", fmt.Errorf("failed to get executable path: %w", err)
+	//}
+	//
+	//// Get the directory of the executable.
+	//execDir := filepath.Dir(execPath)
+
+	// Construct the path to the configuration file
+	return "/Users/jd/Documents/WORKSPACE/UTM/collector-cmd", nil
+	//return execDir, nil
 }
