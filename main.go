@@ -5,11 +5,17 @@ import (
 	"collector/module"
 	"collector/utils"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 )
 
 func main() {
-	beautyLogger := utils.GetBeautyLogger()
+	path, err := utils.GetMyPath()
+	if err != nil {
+		log.Fatalf("Failed to get current path: %v", err)
+	}
+	beautyLogger := utils.GetBeautyLogger(filepath.Join(path, "logs", config.SERV_LOG))
 	beautyLogger.PrintBanner()
 
 	if len(os.Args) > 1 {
@@ -27,7 +33,7 @@ func main() {
 			connectionKey = os.Args[4]
 		}
 
-		collector := module.GetCollectorProcess(typ, host, connectionKey)
+		collector := module.GetCollectorProcess(typ, host, connectionKey, beautyLogger)
 
 		switch action {
 		case "run":
@@ -58,7 +64,7 @@ func main() {
 		if err != nil {
 			beautyLogger.WriteFatal("Error reading config", err)
 		}
-		collector := module.GetCollectorProcess(config.Collector(cnf.CollectorType), "", "")
+		collector := module.GetCollectorProcess(config.Collector(cnf.CollectorType), "", "", beautyLogger)
 		err = collector.Run()
 		if err != nil {
 			beautyLogger.WriteFatal(fmt.Sprintf("Error running %s collector:", cnf.CollectorType), err)

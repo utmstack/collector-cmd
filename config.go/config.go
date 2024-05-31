@@ -16,6 +16,7 @@ const (
 	As400Jar            = "as400-extractor-2.2.0-jar-with-dependencies.jar"
 	JavaVersion         = "jdk-11.0.13.8"
 	CollectorConfigFile = "collector-config.yaml"
+	SERV_LOG            = "utmstack_collector.log"
 )
 
 type ServiceConfig struct {
@@ -97,6 +98,7 @@ func ValidateParams(params []string) bool {
 }
 
 func GetServiceConfig(c Collector) ServiceConfig {
+	path, _ := utils.GetMyPath()
 	switch c {
 	case AS400:
 		cmd, args := GetAs400Command("run", "", "")
@@ -106,7 +108,7 @@ func GetServiceConfig(c Collector) ServiceConfig {
 			Description: "UTMStack AS400 Collector",
 			CMDRun:      cmd,
 			CMDArgs:     args,
-			CMDPath:     "",
+			CMDPath:     path,
 		}
 	default:
 		return ServiceConfig{}

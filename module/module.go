@@ -2,6 +2,7 @@ package module
 
 import (
 	"collector/config.go"
+	"collector/utils"
 )
 
 type ProcessConfig struct {
@@ -12,6 +13,7 @@ type ProcessConfig struct {
 	UninstallationArgs    []string
 	ConnectionHost        string
 	ConnectionKey         string
+	Logger                *utils.BeautyLogger
 }
 
 type CollectorProcess interface {
@@ -20,10 +22,10 @@ type CollectorProcess interface {
 	Uninstall() error
 }
 
-func GetCollectorProcess(collector config.Collector, host, key string) CollectorProcess {
+func GetCollectorProcess(collector config.Collector, host, key string, logger *utils.BeautyLogger) CollectorProcess {
 	switch collector {
 	case config.AS400:
-		return getAS400Collector(host, key)
+		return getAS400Collector(host, key, logger)
 	default:
 		return nil
 	}

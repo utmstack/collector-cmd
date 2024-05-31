@@ -2,17 +2,19 @@ package serv
 
 import (
 	"collector/config.go"
+	"collector/utils"
 	"fmt"
 
 	"github.com/kardianos/service"
 )
 
-func RunService(cnf config.ServiceConfig) error {
+func RunService(cnf config.ServiceConfig, logger *utils.BeautyLogger) error {
 	svcConfig := getConfigServ(cnf.Name, cnf.DisplayName, cnf.Description)
 	prg := &program{
 		cmdRun:  cnf.CMDRun,
 		cmdArgs: cnf.CMDArgs,
 		path:    cnf.CMDPath,
+		logger:  logger,
 	}
 	newService, err := service.New(prg, svcConfig)
 	if err != nil {

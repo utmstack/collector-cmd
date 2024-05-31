@@ -17,7 +17,7 @@ type AS400 struct {
 	Config ProcessConfig
 }
 
-func getAS400Collector(host, key string) *AS400 {
+func getAS400Collector(host, key string, logger *utils.BeautyLogger) *AS400 {
 	as400Once.Do(func() {
 		installCmd, installArgs := config.GetAs400Command("install", host, key)
 		uninstallCmd, uninstallArgs := config.GetAs400Command("uninstall", "", "")
@@ -31,6 +31,7 @@ func getAS400Collector(host, key string) *AS400 {
 				UninstallationArgs:    uninstallArgs,
 				ConnectionHost:        host,
 				ConnectionKey:         key,
+				Logger:                logger,
 			},
 		}
 	})
@@ -39,7 +40,7 @@ func getAS400Collector(host, key string) *AS400 {
 }
 
 func (a *AS400) Run() error {
-	err := serv.RunService(a.Config.ServiceInfo)
+	err := serv.RunService(a.Config.ServiceInfo, a.Config.Logger)
 	if err != nil {
 		return fmt.Errorf("error running service: %v", err)
 	}
@@ -77,18 +78,19 @@ func (a *AS400) InstallDependencies() error {
 }
 
 func (a *AS400) Uninstall() error {
-	err := a.UninstallDependencies()
-	if err != nil {
-		return fmt.Errorf("error uninstalling dependencies: %v", err)
-	}
-
 	result, errB := utils.ExecuteWithResult(a.Config.UninstallationCommand, "", a.Config.UninstallationArgs...)
 	if errB {
-		return fmt.Errorf("error executing uninstall command: %v", err)
+		return fmt.Errorf("error executing uninstall command: %v", result)
 	}
-	err = utils.CheckErrorsInOutput(result)
+
+	err := utils.CheckErrorsInOutput(result)
 	if err != nil {
 		return fmt.Errorf("error executing uninstall command: %v", err)
+	}
+
+	err = a.UninstallDependencies()
+	if err != nil {
+		return fmt.Errorf("error uninstalling dependencies: %v", err)
 	}
 
 	err = serv.UninstallService(a.Config.ServiceInfo)

@@ -2,9 +2,9 @@ package utils
 
 import (
 	"fmt"
-	"os"
 	"sync"
-	"time"
+
+	"github.com/threatwinds/logger"
 
 	"github.com/logrusorgru/aurora"
 )
@@ -15,35 +15,39 @@ var (
 )
 
 type BeautyLogger struct {
+	fileLogger *logger.Logger
 }
 
-func GetBeautyLogger() *BeautyLogger {
+func GetBeautyLogger(filepath string) *BeautyLogger {
 	beautyLoggerOnce.Do(func() {
 		beautyLogger = &BeautyLogger{}
+		beautyLogger.fileLogger = CreateLogger(filepath)
 	})
 	return beautyLogger
 }
 
 func (b *BeautyLogger) WriteError(msg string, err error) {
 	if err == nil {
-		fmt.Printf("%s: %s: %s\n", "UTMStack", aurora.Red("error").String(), msg)
+		fmt.Printf("%s: %s: %s\n", "UTMStack Collector", aurora.Red("error").String(), msg)
+		b.fileLogger.ErrorF(fmt.Sprintf("%s: %s: %s", "UTMStack Collector", "error", msg))
 	} else {
-		fmt.Printf("%s: %s: %s: %v\n", "UTMStack", aurora.Red("error").String(), msg, err)
+		fmt.Printf("%s: %s: %s: %v\n", "UTMStack Collector", aurora.Red("error").String(), msg, err)
+		b.fileLogger.ErrorF(fmt.Sprintf("%s: %s: %s: %v", "UTMStack Collector", "error", msg, err))
 	}
 }
 
 func (b *BeautyLogger) WriteFatal(msg string, err error) {
 	if err == nil {
-		fmt.Printf("%s: %s: %s\n", "UTMStack", aurora.Red("error").String(), msg)
+		fmt.Printf("%s: %s: %s\n", "UTMStack Collector", aurora.Red("error").String(), msg)
+		b.fileLogger.Fatal(fmt.Sprintf("%s: %s: %s", "UTMStack Collector", "error", msg))
 	} else {
-		fmt.Printf("%s: %s: %s: %v\n", "UTMStack", aurora.Red("error").String(), msg, err)
+		fmt.Printf("%s: %s: %s: %v\n", "UTMStack Collector", aurora.Red("error").String(), msg, err)
+		b.fileLogger.Fatal(fmt.Sprintf("%s: %s: %s: %v", "UTMStack Collector", "error", msg, err))
 	}
-	time.Sleep(5 * time.Second)
-	os.Exit(1)
 }
 
 func (b *BeautyLogger) WriteSuccessfull(msg string) {
-	fmt.Printf("%s: %s: %s\n", "UTMStack", aurora.Green("success").String(), msg)
+	fmt.Printf("%s: %s: %s\n", "UTMStack Collector", aurora.Green("success").String(), msg)
 }
 
 func (b *BeautyLogger) WriteSimpleMessage(msg string) {
