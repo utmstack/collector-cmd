@@ -1,4 +1,0 @@
-{
-  "java_service": "[Unit]\nDescription=Java Collector Service\nAfter=network.target\n\n[Service]\nExecStart=/usr/bin/java -jar {{.JarPath}} --host {{.Host}} --connection-key {{.ConnectionKey}}\n\n[Install]\nWantedBy=multi-user.target",
-  "executable_service": "[Unit]\nDescription=Executable Collector Service\nAfter=network.target\n\n[Service]\nExecStart={{.ExecutablePath}} --host {{.Host}} --connection-key {{.ConnectionKey}}\n\n[Install]\nWantedBy=multi-user.target"
-}
