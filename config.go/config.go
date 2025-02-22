@@ -13,8 +13,7 @@ type ServiceTypeConfig struct {
 }
 
 const (
-	As400Jar            = "as400-extractor-2.2.0-jar-with-dependencies.jar"
-	JavaVersion         = "jdk-11.0.13.8"
+	As400Jar            = "as400.jar"
 	CollectorConfigFile = "collector-config.yaml"
 	SERV_LOG            = "utmstack_collector.log"
 )
@@ -47,7 +46,7 @@ func GetJavaPath() string {
 	currentPath, _ := utils.GetMyPath()
 	switch runtime.GOOS {
 	case "windows":
-		return filepath.Join(currentPath, "dependencies", JavaVersion, "bin", "java.exe")
+		return filepath.Join(currentPath, "jdk", "bin", "java.exe")
 	default:
 		return ""
 	}
