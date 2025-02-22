@@ -29,20 +29,20 @@ func GetBeautyLogger(filepath string) *BeautyLogger {
 func (b *BeautyLogger) WriteError(msg string, err error) {
 	if err == nil {
 		fmt.Printf("%s: %s: %s\n", "UTMStack Collector", aurora.Red("error").String(), msg)
-		b.fileLogger.ErrorF(fmt.Sprintf("%s: %s: %s", "UTMStack Collector", "error", msg))
+		b.fileLogger.ErrorF("%s: %s: %s", "UTMStack Collector", "error", msg)
 	} else {
 		fmt.Printf("%s: %s: %s: %v\n", "UTMStack Collector", aurora.Red("error").String(), msg, err)
-		b.fileLogger.ErrorF(fmt.Sprintf("%s: %s: %s: %v", "UTMStack Collector", "error", msg, err))
+		b.fileLogger.ErrorF("%s: %s: %s: %v", "UTMStack Collector", "error", msg, err)
 	}
 }
 
 func (b *BeautyLogger) WriteFatal(msg string, err error) {
 	if err == nil {
 		fmt.Printf("%s: %s: %s\n", "UTMStack Collector", aurora.Red("error").String(), msg)
-		b.fileLogger.Fatal(fmt.Sprintf("%s: %s: %s", "UTMStack Collector", "error", msg))
+		b.fileLogger.Fatal("%s: %s: %s", "UTMStack Collector", "error", msg)
 	} else {
 		fmt.Printf("%s: %s: %s: %v\n", "UTMStack Collector", aurora.Red("error").String(), msg, err)
-		b.fileLogger.Fatal(fmt.Sprintf("%s: %s: %s: %v", "UTMStack Collector", "error", msg, err))
+		b.fileLogger.Fatal("%s: %s: %s: %v", "UTMStack Collector", "error", msg, err)
 	}
 }
 
